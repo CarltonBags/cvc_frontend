@@ -11,10 +11,35 @@ export default function Join(){
         setName(e.target.value)    
     }
 
+    const submit = async () =>{
+        if(name){
+            setStatus(3)
+            const response = await axios.post(import.meta.env.VITE_BACKEND_ADDUSER,{
+                name:name
+            },
+            {
+                headers: {
+                  'Content-Type': 'application/json'
+                }
+            })
+            console.log("Response:", response.data)
+            if(response.data.success == true){
+                setStatus(1)
+            }
+            if(response.data.success == false){
+                setStatus(2)
+            }
+        }
+        
+    }
+   
+
     useEffect(()=>{
         const fetch = async ()=>{
-            const res = await axios.get("")
-            const names = res.data
+            const res = await axios.get(import.meta.env.VITE_BACKEND_GETNAMES)
+            const nam = res.data
+
+            setNames(nam)
 
         }
         fetch()
@@ -42,9 +67,29 @@ export default function Join(){
                     >
                     </input>
                 </div>
-                <div className="flex bg-[#d6ea3a] border-4 text-black border-black px-2 w-20 h-8 items-center hover:scale-105 hover:cursor-pointer">
-                    starch              
-                </div>
+                {status == 0 &&
+                    <div                         
+                        onClick={submit}
+                     className="flex bg-[#d6ea3a] border-4 text-black border-black px-2 w-20 h-8 items-center hover:scale-105 hover:cursor-pointer">
+                        starch              
+                    </div>
+                }
+                {status == 1 &&
+                    <div className="flex bg-green-500 border-4 text-black border-black px-2 w-20 h-8 items-center hover:scale-105 hover:cursor-pointer">
+                        geil!              
+                    </div>
+                }
+                {status == 2 &&
+                    <div onClick={()=>setStatus(0)}className="flex bg-red-500 border-4 text-black border-black px-2 w-20 h-8 items-center hover:scale-105 hover:cursor-pointer">
+                        scheiße!              
+                    </div>
+                }
+                {status == 3 &&
+                    <div className="flex bg-blue-500 border-4 text-black border-black px-2 w-20 h-8 items-center hover:scale-105 hover:cursor-pointer animate-pulse">
+                        wadde             
+                    </div>
+                }
+                
 
             </div>
             <div className="flex flex-col border-4 border-black mt-20 p-8 bg-[#FFFDD0]">
@@ -52,7 +97,7 @@ export default function Join(){
                     ZUSAGEN
                 </div>
                 <div className="text-5xl mt-4 font-bold font-intro">
-                    <span className="tennis-green">17</span>
+                    <span className="tennis-green">{names && names.length >0 ? names.length : 0}</span>
                 </div>
                 <div className="text-5xl mt-4 font-bold font-intro text-[#004aad]">
                     STARCH!
