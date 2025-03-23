@@ -38,7 +38,7 @@ export default function Join(){
         const fetch = async ()=>{
             const res = await axios.get(import.meta.env.VITE_BACKEND_GETNAMES)
             const nam = res.data
-
+            console.log("res",res)
             setNames(nam)
 
         }
